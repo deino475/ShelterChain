@@ -26,12 +26,12 @@ class Response {
 		}
 	}
 
-	public function render_text($text) {
+	public static function render_text($text) {
 		echo $text;
 	}
 
-	public function redirect_to($name) {
-		header('Location: ?m=/'.$name);
+	public static function redirect_to($name) {
+		header('Location: ?r=/'.$name);
 	}
 }
 

@@ -95,10 +95,12 @@ $node->route('/mine', function($data = []) use ($node){
 			'ada' => $_POST['ada'],
 			'lat' => $_POST['lat'],
 			'lng' => $_POST['lng'],
-			'time_stamp' => $time_stamp
+			'time_stamp' => $time_stamp,
+			'previous_hash' => $previous_hash,
+			'current_hash' => $new_block->hash
 		);
 
-		$url = $peer . "/?r=/mine";
+		$url = $peer . "/?r=/receive-block";
 		$ch = curl_init($url);
 		curl_setopt($ch, CURLOPT_POST, 1);
 		curl_setopt($ch, CURLOPT_POSTFIELDS,http_build_query($data));
@@ -106,6 +108,23 @@ $node->route('/mine', function($data = []) use ($node){
 		$response = curl_exec($ch);
 		curl_close($ch);
 	}
+});
+
+$node->route('/receive-block', function($data = []) use ($node){
+	header('Access-Control-Allow-Origin: *');
+	$chain_data = json_decode(file_get_contents('blockchain.json'),true);
+	if (sizeof($chain_data) == 0) {
+		$block = new Block('','','00000000000');
+		$block->generate_genesis_block();
+		array_push($chain_data, $block->export_block($json = false));
+	}
+	$end_block = array_pop($chain_data);
+	$data_to_edit = $end_block['data'];
+	$previous_hash = $end_block['hash'];
+	if ($previous_hash != $_POST['previous_hash']) {
+		return;
+	}
+	
 });
 
 $node->route('/last-block', function($data = []) use ($node){
