@@ -74,7 +74,7 @@ $node->route('/mine', function($data = []) use ($node){
 	$data_to_edit = $end_block['data'];
 	$previous_hash = $end_block['hash'];
 	$time_stamp = $_POST['time_stamp'] ?: time();
-	$data_to_edit[md5($_POST['org_name'])] = array($_POST['org_name'], $_POST['street_name'],$_POST['city_name'],$_POST['state_name'],$_POST['zip_code'],$_POST['available'],$_POST['pets'],$_POST['ada'],$_POST['lat'],$_POST['lng'],$time_stamp);
+	$data_to_edit[md5(trim($_POST['org_name']))] = array(trim($_POST['org_name']), trim($_POST['street_name']),trim($_POST['city_name']),trim($_POST['state_name']),trim($_POST['zip_code']),trim($_POST['available']),trim($_POST['pets']),trim($_POST['ada']),trim($_POST['lat']),trim($_POST['lng']),$time_stamp);
 	$new_block = new Block($data_to_edit, $previous_hash, $time_stamp);
 	array_push($chain_data, $end_block);
 	array_push($chain_data, $new_block->export_block($json = false));
@@ -85,16 +85,16 @@ $node->route('/mine', function($data = []) use ($node){
 	$peers = json_decode(file_get_contents('peers.json'),true);
 	foreach ($peers as $peer) {
 		$data = array(
-			'org_name' => $_POST['org_name'],
-			'street_name' => $_POST['street_name'],
-			'city_name' => $_POST['city_name'],
-			'state_name' => $_POST['state_name'],
-			'zip_code' => $_POST['zip_code'],
-			'available' => $_POST['available'],
-			'pets' => $_POST['pets'],
-			'ada' => $_POST['ada'],
-			'lat' => $_POST['lat'],
-			'lng' => $_POST['lng'],
+			'org_name' => trim($_POST['org_name']),
+			'street_name' => trim($_POST['street_name']),
+			'city_name' => trim($_POST['city_name']),
+			'state_name' => trim($_POST['state_name']),
+			'zip_code' => trim($_POST['zip_code']),
+			'available' => trim($_POST['available']),
+			'pets' => trim($_POST['pets']),
+			'ada' => trim($_POST['ada']),
+			'lat' => trim($_POST['lat']),
+			'lng' => trim($_POST['lng']),
 			'time_stamp' => $time_stamp,
 			'previous_hash' => $previous_hash,
 			'current_hash' => $new_block->hash
@@ -124,7 +124,7 @@ $node->route('/receive-block', function($data = []) use ($node){
 	if ($previous_hash != $_POST['previous_hash']) {
 		return;
 	}
-	$data_to_edit[md5($_POST['org_name'])] = array($_POST['org_name'], $_POST['street_name'],$_POST['city_name'],$_POST['state_name'],$_POST['zip_code'],$_POST['available'],$_POST['pets'],$_POST['ada'],$_POST['lat'],$_POST['lng'],$_POST['time_stamp']);
+	$data_to_edit[md5(trim($_POST['org_name']))] = array(trim($_POST['org_name']), trim($_POST['street_name']),trim($_POST['city_name']),trim($_POST['state_name']),trim($_POST['zip_code']),trim($_POST['available']),trim($_POST['pets']),trim($_POST['ada']),trim($_POST['lat']),trim($_POST['lng']),$_POST['time_stamp']);
 	$new_block = new Block($data_to_edit, $previous_hash, $_POST['time_stamp']);
 	if ($new_block->hash != $_POST['current_hash']) {
 		return;
