@@ -43,3 +43,22 @@ class Block {
 		$this->hash = $this->hash_data();
 	}
 }
+
+function verify_chain($data) {
+	for ($i=0; $i < sizeof($data); $i++) { 
+		if ($i == 0) {
+			if ($data[$i]['previous_hash'] != "00000000000000000000000000000000") {
+				return false;
+			}
+		}
+		else {
+			if ($data[$i]['previous_hash'] != $data[$i - 1]['hash']) {
+				return false;
+			}
+		}
+		if (sha1($data[$i]['nonce'] . json_encode($data[$i]['data']) . $data[$i]['time_stamp'] . $data[$i]['previous_hash']) != $data[$i]['hash']) {
+			return false;
+		}
+	}
+	return true;
+}

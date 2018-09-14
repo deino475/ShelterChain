@@ -134,6 +134,29 @@ $node->route('/receive-block', function($data = []) use ($node){
 	file_put_contents('blockchain.json', json_encode($chain_data));
 });
 
+$node->route('/consensus', function($data = []) use ($node){
+	header('Access-Control-Allow-Origin: *');
+	$peers = json_decode(file_get_contents('peers.json'),true);
+	$longest_chain = null;
+	$size_of_longest_chain = -1;
+	foreach ($peers as $peer) {
+		$url = $peer . "/?r=/chain";
+		$ch = curl_init($url);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		$response = curl_exec($ch);
+		curl_close($ch);
+		$chain_data = json_decode($response);
+		if (sizeof($chain_data) > $size_of_longest_chain) {
+			if (verify_chain($chain_data)) {
+				$longest_chain = $chain_data;
+				$size_of_longest_chain = sizeof($chain_data);
+			}
+		}
+	}
+
+	file_put_contents("blockchain.json", json_encode($longest_chain));
+});
+
 $node->route('/last-block', function($data = []) use ($node){
 	$chain_data = json_decode(file_get_contents('blockchain.json'),true);
 	if (sizeof($chain_data) == 0) {
