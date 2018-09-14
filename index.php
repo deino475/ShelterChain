@@ -124,7 +124,14 @@ $node->route('/receive-block', function($data = []) use ($node){
 	if ($previous_hash != $_POST['previous_hash']) {
 		return;
 	}
-	
+	$data_to_edit[md5($_POST['org_name'])] = array($_POST['org_name'], $_POST['street_name'],$_POST['city_name'],$_POST['state_name'],$_POST['zip_code'],$_POST['available'],$_POST['pets'],$_POST['ada'],$_POST['lat'],$_POST['lng'],$_POST['time_stamp']);
+	$new_block = new Block($data_to_edit, $previous_hash, $_POST['time_stamp']);
+	if ($new_block->hash != $_POST['current_hash']) {
+		return;
+	}
+	array_push($chain_data, $end_block);
+	array_push($chain_data, $new_block->export_block($json = false));
+	file_put_contents('blockchain.json', json_encode($chain_data));
 });
 
 $node->route('/last-block', function($data = []) use ($node){
