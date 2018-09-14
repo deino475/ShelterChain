@@ -113,13 +113,13 @@
         <div class = "col-md-6">
           <div class = "form-group">
             <label for="latitude">Latitude</label>
-            <input type = "text" class = "form-control" id = "latitude" placeholder="Organization Name">
+            <input type = "number" class = "form-control" id = "latitude" placeholder="Latitude Coordinates Here">
           </div>
         </div>
         <div class = "col-md-6">
           <div class = "form-group">
             <label for="longitude">Longitude</label>
-            <input type = "text" class = "form-control" id = "longitude" placeholder="Organization Name">
+            <input type = "number" class = "form-control" id = "longitude" placeholder="Longitude Coordinates Here">
           </div>
         </div>
       </div>
